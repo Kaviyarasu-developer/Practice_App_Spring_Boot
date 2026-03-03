@@ -1,17 +1,17 @@
 package com.practice_app.dtos;
 
-public class LoginDto {
+public class UserDto {
 	
-    private String email;
+    private String username;
     private String password;
 
     // Getters & Setters
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
