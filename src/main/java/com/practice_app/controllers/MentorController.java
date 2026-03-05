@@ -1,5 +1,7 @@
 package com.practice_app.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.practice_app.dtos.MentorDto;
 import com.practice_app.models.MentorEntity;
-import com.practice_app.repos.MentorRepository;
 import com.practice_app.services.MentorService;
 import com.practice_app.services.UserService;
 
@@ -20,8 +21,6 @@ public class MentorController {
 
 	@Autowired
 	private MentorService mentorService;
-	@Autowired
-	private MentorRepository mentorRepo;
 	@Autowired
 	private UserService userService;
 
@@ -34,8 +33,8 @@ public class MentorController {
 	}
 
 	@GetMapping("/getall")
-	public ResponseEntity<?> mentors(){
-		return ResponseEntity.ok(mentorRepo.findAll());
+	public ResponseEntity<List<MentorDto>> mentors(){
+		return ResponseEntity.ok(mentorService.getAllMentors());
 	}
 
 }

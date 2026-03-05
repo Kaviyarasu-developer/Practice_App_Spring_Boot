@@ -32,7 +32,16 @@ public class StaffService {
 		return staffRepo.save(entity);
 	}
 	
-	public List<StaffEntity> getAllStaffs() {
-		return staffRepo.findAll();
+	public List<StaffDto> getAllStaffs() {
+		return staffRepo.findAll().stream().map(this::convertToDto).toList();
+	}
+	
+	public StaffDto convertToDto(StaffEntity entity) {
+		StaffDto dto = new StaffDto();
+		dto.setName(entity.getName());
+		dto.setDept(entity.getDept());
+		dto.setUsername(entity.getUsername());
+		dto.setClgcode(entity.getCollege().getClgCode());
+		return dto;
 	}
 }

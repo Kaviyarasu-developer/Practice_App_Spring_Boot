@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.practice_app.dtos.StdDto;
 import com.practice_app.models.StdEntity;
-import com.practice_app.repos.StdRepository;
 import com.practice_app.services.StdService;
 import com.practice_app.services.UserService;
 
@@ -22,8 +21,6 @@ public class StdController {
 	private StdService stdService;
 	@Autowired
 	private UserService userService;
-	@Autowired
-	private StdRepository stdRepo;
 	
 	@PostMapping("/create")
 	public ResponseEntity<?> createStd(@RequestBody StdDto stdDto) {
@@ -35,6 +32,6 @@ public class StdController {
 	
 	@GetMapping("/getall")
 	public ResponseEntity<?> students(){
-		return ResponseEntity.ok(stdRepo.findAll());
+		return ResponseEntity.ok(stdService.getAllStudents());
 	}
 }

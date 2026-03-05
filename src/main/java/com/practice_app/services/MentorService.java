@@ -1,5 +1,7 @@
 package com.practice_app.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,5 +34,17 @@ public class MentorService {
 	    entity.setCollege(college);
 		
 		return mentorRepo.save(entity);
+	}
+	
+	public List<MentorDto> getAllMentors() {
+		List<MentorEntity> mentors =mentorRepo.findAll();
+		return mentors.stream().map(this::converToDto).toList();
+	}
+	public MentorDto converToDto(MentorEntity mentor) {
+		MentorDto dto = new MentorDto();
+		dto.setName(mentor.getName()); 
+		dto.setUsername(mentor.getUsername());
+		dto.setClgcode(mentor.getCollege().getClgCode());
+		return dto;
 	}
 }

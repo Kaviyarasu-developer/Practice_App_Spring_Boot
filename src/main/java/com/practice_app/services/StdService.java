@@ -1,5 +1,7 @@
 package com.practice_app.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,5 +40,19 @@ public class StdService {
 	    // 4️⃣ save
 	    return stdRepository.save(student);
 	}
-
+	
+	public List<StdDto> getAllStudents() {
+		List<StdEntity> students = stdRepository.findAll();
+		return students.stream().map(this::convertToDto).toList();
+	}
+	
+	public StdDto convertToDto(StdEntity entity) {
+		StdDto dto = new StdDto();
+		dto.setName(entity.getName());
+		dto.setDept(entity.getDept());
+		dto.setRollno(entity.getRollno());
+		dto.setUsername(entity.getUsername());
+		dto.setClgcode(entity.getCollege().getClgCode());
+		return dto;
+	}
 }
