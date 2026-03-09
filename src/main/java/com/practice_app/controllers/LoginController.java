@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.practice_app.dtos.UserDto;
+import com.practice_app.dtos.UserRegisterDto;
 import com.practice_app.models.UserEntity;
 import com.practice_app.repos.UserRepository;
 
@@ -21,7 +21,7 @@ public class LoginController {
     private UserRepository userRepository;   
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserDto request) {
+    public ResponseEntity<?> login(@RequestBody UserRegisterDto request) {
 
         UserEntity user = userRepository.findByUsername(request.getUsername());
 

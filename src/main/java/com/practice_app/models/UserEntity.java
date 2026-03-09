@@ -1,22 +1,62 @@
 package com.practice_app.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users_details")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class UserEntity {
+
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(nullable = false)
+    private String name;
 
+    @Column(unique = true,nullable = false)
     private String username;
+    
+    @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
     private String role;
+    
+    @JsonIgnore
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+    private ClgEntity college;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+    private StdEntity student;
+    
+    @JsonIgnore
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+    private MentorEntity mentor;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+    private StaffEntity staff;
+    
+    public UserEntity() {}
+
+	public UserEntity(Long id, String name, String username, String password, String role, StdEntity student, MentorEntity mentor, StaffEntity staff, ClgEntity college) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.username = username;
+		this.password = password;
+		this.role = role;
+		this.student = student;
+		this.mentor = mentor;
+		this.staff = staff;
+		this.college = college;
+	}
 
 	public Long getId() {
 		return id;
@@ -24,6 +64,14 @@ public class UserEntity {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getUsername() {
@@ -50,18 +98,36 @@ public class UserEntity {
 		this.role = role;
 	}
 
-	public UserEntity(Long id, String username, String password, String role) {
-		super();
-		this.id = id;
-		this.username = username;
-		this.password = password;
-		this.role = role;
+	public StdEntity getStudent() {
+		return student;
 	}
 
-	public UserEntity() {
-		super();
-		// TODO Auto-generated constructor stub
+	public void setStudent(StdEntity student) {
+		this.student = student;
 	}
     
-    
+	public MentorEntity getMentor() {
+		return mentor;
+	}
+	
+	public void setMentor(MentorEntity mentor) {
+		this.mentor = mentor;
+	}
+	
+	public StaffEntity getStaff() {
+		return staff;
+	}
+	
+	public void setStaff(StaffEntity staff) {
+		this.staff = staff;
+	}
+
+	public ClgEntity getCollege() {
+		return college;
+	}
+
+	public void setCollege(ClgEntity college) {
+		this.college = college;
+	}
+	
 }

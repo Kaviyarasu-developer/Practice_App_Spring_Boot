@@ -1,28 +1,23 @@
 package com.practice_app.dtos;
 
-public class UserDto {
+public class UserProfileDto {
 
     private Long id;
     private String name;
     private String username;
     private String role;
 
-    public UserDto() {
-    }
+    private long followers;
+    private long following;
 
-    public UserDto(Long id, String name, String username, String role) {
-        this.id = id;
-        this.name = name;
-        this.username = username;
-        this.role = role;
-    }
+    public UserProfileDto(){}
 
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.id=id;
     }
 
     public String getName() {
@@ -30,7 +25,7 @@ public class UserDto {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name=name;
     }
 
     public String getUsername() {
@@ -38,7 +33,7 @@ public class UserDto {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.username=username;
     }
 
     public String getRole() {
@@ -46,6 +41,22 @@ public class UserDto {
     }
 
     public void setRole(String role) {
-        this.role = role;
+        this.role=role;
+    }
+
+    public long getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(long followers) {
+        this.followers=followers;
+    }
+
+    public long getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(long following) {
+        this.following=following;
     }
 }

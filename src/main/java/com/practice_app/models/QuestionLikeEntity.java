@@ -13,12 +13,12 @@ public class QuestionLikeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name="question_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="question_id", nullable = false)
     private QuestionEntity question;
 
-    @ManyToOne
-    @JoinColumn(name="user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id", nullable = false)
     private UserEntity user;
 
 	public QuestionLikeEntity() {

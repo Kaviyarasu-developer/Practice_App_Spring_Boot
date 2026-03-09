@@ -1,90 +1,93 @@
 package com.practice_app.models;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.*;
 @Entity
 @Table(name = "students_details")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class StdEntity {
 
     @Id
-    private Long rollno;
-    private String name;
-    private String dept;
-    private String username;
-    private String password;
-    private String role = "STD";
+    private Long id;
 
-    // 🔥 Many students -> one college
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(unique = true, nullable = false)
+    private Long rollno;
+    
+    private String year;
+    
+    @Column(nullable = false)
+    private String dept;
+    
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "clgcode", nullable = false)
     private ClgEntity college;
 
+    @OneToOne(optional = false)
+    @MapsId
+    @JoinColumn(name = "user_id",nullable = false)
+    @JsonIgnore
+    private UserEntity user;
+    
     public StdEntity() {}
 
-    public StdEntity(Long rollno, String name, String dept,
-                     String username, String password, ClgEntity college) {
-        this.rollno = rollno;
-        this.name = name;
-        this.dept = dept;
-        this.username = username;
-        this.password = password;
-        this.college = college;
-        this.role = "STD";
-    }
+	public StdEntity(Long id, Long rollno, String year, String dept, ClgEntity college, UserEntity user) {
+		super();
+		this.id = id;
+		this.rollno = rollno;
+		this.year = year;
+		this.dept = dept;
+		this.college = college;
+		this.user = user;
+	}
 
-    public Long getRollno() {
-        return rollno;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setRollno(Long rollno) {
-        this.rollno = rollno;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public Long getRollno() {
+		return rollno;
+	}
 
-    public String getDept() {
-        return dept;
-    }
+	public void setRollno(Long rollno) {
+		this.rollno = rollno;
+	}
 
-    public String getUsername() {
-        return username;
-    }
+	public String getYear() {
+		return year;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public void setYear(String year) {
+		this.year = year;
+	}
 
-    public ClgEntity getCollege() {
-        return college;
-    }
-
-    public void setCollege(ClgEntity college) {
-        this.college = college;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-	public void setName(String name) {
-		this.name = name;
+	public String getDept() {
+		return dept;
 	}
 
 	public void setDept(String dept) {
 		this.dept = dept;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public ClgEntity getCollege() {
+		return college;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setCollege(ClgEntity college) {
+		this.college = college;
 	}
 
-	public void setRole(String role) {
-		this.role = role;
+	public UserEntity getUser() {
+		return user;
 	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
+    
 }

@@ -1,47 +1,41 @@
 package com.practice_app.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "staff_details")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class StaffEntity {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String name;
-	private String dept;
-	private String username;
-	private String password;
-	private String role = "STAFF";
 	
-    // 🔥 Many students -> one college
+	@Column(nullable = false)
+	private String dept;
+	
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clgcode", nullable = false)
     private ClgEntity college;
+    
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "user_id",nullable = false)
+    @JsonIgnore
+    private UserEntity user;
 
 	public StaffEntity() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public StaffEntity(Long id, String name, String dept, String username, String password, String role,
-			ClgEntity college) {
+	public StaffEntity(Long id, String dept, ClgEntity college, UserEntity user) {
 		super();
 		this.id = id;
-		this.name = name;
 		this.dept = dept;
-		this.username = username;
-		this.password = password;
-		this.role = role;
 		this.college = college;
+		this.user = user;
 	}
 
 	public Long getId() {
@@ -52,44 +46,12 @@ public class StaffEntity {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getDept() {
 		return dept;
 	}
 
 	public void setDept(String dept) {
 		this.dept = dept;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
 	}
 
 	public ClgEntity getCollege() {
@@ -99,5 +61,13 @@ public class StaffEntity {
 	public void setCollege(ClgEntity college) {
 		this.college = college;
 	}
-    
+
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
+
 }

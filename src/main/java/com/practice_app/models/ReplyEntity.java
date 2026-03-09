@@ -2,13 +2,7 @@ package com.practice_app.models;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "reply_details")
@@ -23,65 +17,30 @@ public class ReplyEntity {
     private LocalDateTime createdAt;
 
     @ManyToOne
-    @JoinColumn(name="question_id")
+    @JoinColumn(name = "question_id")
     private QuestionEntity question;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private UserEntity user;
 
-	public ReplyEntity() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    public Long getId() { return id; }
 
-	public ReplyEntity(Long id, String message, LocalDateTime createdAt, QuestionEntity question, UserEntity user) {
-		super();
-		this.id = id;
-		this.message = message;
-		this.createdAt = createdAt;
-		this.question = question;
-		this.user = user;
-	}
+    public void setId(Long id) { this.id = id; }
 
-	public Long getId() {
-		return id;
-	}
+    public String getMessage() { return message; }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setMessage(String message) { this.message = message; }
 
-	public String getMessage() {
-		return message;
-	}
+    public LocalDateTime getCreatedAt() { return createdAt; }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
+    public QuestionEntity getQuestion() { return question; }
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
+    public void setQuestion(QuestionEntity question) { this.question = question; }
 
-	public QuestionEntity getQuestion() {
-		return question;
-	}
+    public UserEntity getUser() { return user; }
 
-	public void setQuestion(QuestionEntity question) {
-		this.question = question;
-	}
-
-	public UserEntity getUser() {
-		return user;
-	}
-
-	public void setUser(UserEntity user) {
-		this.user = user;
-	}
-    
+    public void setUser(UserEntity user) { this.user = user; }
 }

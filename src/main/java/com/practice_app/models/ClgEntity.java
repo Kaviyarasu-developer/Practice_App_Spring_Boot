@@ -2,81 +2,101 @@ package com.practice_app.models;
 
 import java.util.List;
 
-import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "colleges_details")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class ClgEntity {
 
     @Id
     @Column(name = "clgcode")
-    private Integer clgCode;
+    private Long clgCode;
 
-    @Column(nullable = false)
-    private String clgname;
+    @Column(unique = true, nullable = false)
+    private String clgName;
+    
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
 
-    private String username;
-    private String password; 
-
-    private String role = "PRINCIPAL"; 
-
-    // 🔥 One college -> many students
-    @OneToMany(mappedBy = "college", cascade = CascadeType.ALL)
-    @JsonIgnore  // prevent infinite JSON loop
+    @JsonIgnore
+    @OneToMany(mappedBy = "college", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<StdEntity> students;
 
-    public ClgEntity() {}
+    @JsonIgnore
+    @OneToMany(mappedBy = "college", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<MentorEntity> mentors;
 
-    public ClgEntity(Integer clgCode, String clgName, String username, String password) {
-        this.clgCode = clgCode;
-        this.clgname = clgName;
-        this.username = username;
-        this.password = password;
-        this.role = "PRINCIPAL";
-    }
+    @JsonIgnore
+    @OneToMany(mappedBy = "college", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<StaffEntity> staffs;
 
-    public Integer getClgCode() {
-        return clgCode;
-    }
+	public ClgEntity() {
+		super();
+	}
 
-    public void setClgCode(Integer clgCode) {
-        this.clgCode = clgCode;
-    }
+	public ClgEntity(Long clgCode, String clgName, UserEntity user, List<StdEntity> students,
+			List<MentorEntity> mentors, List<StaffEntity> staffs) {
+		super();
+		this.clgCode = clgCode;
+		this.clgName = clgName;
+		this.user = user;
+		this.students = students;
+		this.mentors = mentors;
+		this.staffs = staffs;
+	}
 
-    public String getClgName() {
-        return clgname;
-    }
+	public Long getClgCode() {
+		return clgCode;
+	}
 
-    public void setClgName(String clgName) {
-        this.clgname = clgName;
-    }
+	public void setClgCode(Long clgCode) {
+		this.clgCode = clgCode;
+	}
 
-    public String getUsername() {
-        return username;
-    }
+	public String getClgName() {
+		return clgName;
+	}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	public void setClgName(String clgName) {
+		this.clgName = clgName;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public UserEntity getUser() {
+		return user;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
 
-    public String getRole() {
-        return role;
-    }
+	public List<StdEntity> getStudents() {
+		return students;
+	}
 
-    public List<StdEntity> getStudents() {
-        return students;
-    }
+	public void setStudents(List<StdEntity> students) {
+		this.students = students;
+	}
 
-    public void setStudents(List<StdEntity> students) {
-        this.students = students;
-    }
+	public List<MentorEntity> getMentors() {
+		return mentors;
+	}
+
+	public void setMentors(List<MentorEntity> mentors) {
+		this.mentors = mentors;
+	}
+
+	public List<StaffEntity> getStaffs() {
+		return staffs;
+	}
+
+	public void setStaffs(List<StaffEntity> staffs) {
+		this.staffs = staffs;
+	}
+    
 }

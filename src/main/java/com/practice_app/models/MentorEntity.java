@@ -1,36 +1,43 @@
 package com.practice_app.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "mentors_details")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class MentorEntity {
 	
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)	
 	private Long id;
-	private String name;
-	private String username;
-	private String password;
-	private String role = "MENTOR";
 	
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clgcode", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "clgcode", nullable = true)
     private ClgEntity college; 
+    
+    @OneToOne(optional = false)
+    @MapsId
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
+    private UserEntity user;
+    
+    private String expertise;
+    
+    private String specialization;
     
 	public MentorEntity() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
-	
-	public MentorEntity(Long id, String name, String username, String password, String role, ClgEntity college) {
+
+	public MentorEntity(Long id, ClgEntity college, UserEntity user, String expertise, String specialization) {
 		super();
 		this.id = id;
-		this.name = name;
-		this.username = username;
-		this.password = password;
-		this.role = "MENTOR";
 		this.college = college;
+		this.user = user;
+		this.expertise = expertise;
+		this.specialization = specialization;
 	}
 
 	public Long getId() {
@@ -41,44 +48,36 @@ public class MentorEntity {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
 	public ClgEntity getCollege() {
 		return college;
 	}
 
 	public void setCollege(ClgEntity college) {
 		this.college = college;
+	}
+
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
+
+	public String getExpertise() {
+		return expertise;
+	}
+
+	public void setExpertise(String expertise) {
+		this.expertise = expertise;
+	}
+
+	public String getSpecialization() {
+		return specialization;
+	}
+
+	public void setSpecialization(String specialization) {
+		this.specialization = specialization;
 	}
     
 }

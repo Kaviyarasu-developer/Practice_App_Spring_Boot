@@ -20,8 +20,8 @@ public class QuestionEntity {
 
     private LocalDateTime createdAt;
 
-    @ManyToOne
-    @JoinColumn(name="user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id", nullable=false)
     private UserEntity user;
 
 	public QuestionEntity() {
