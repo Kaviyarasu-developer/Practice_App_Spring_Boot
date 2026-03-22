@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.practice_app.dtos.UserDto;
+import com.practice_app.dtos.UserResponseDto;
 import com.practice_app.services.FollowService;
 
 @RestController
@@ -38,12 +38,12 @@ public class FollowController {
     }
 
     @GetMapping("/followers/{userId}")
-    public List<UserDto> followers(@PathVariable Long userId) {
+    public List<UserResponseDto> followers(@PathVariable Long userId) {
         return followService.getFollowers(userId);
     }
 
     @GetMapping("/following/{userId}")
-    public List<UserDto> following(@PathVariable Long userId) {
+    public List<UserResponseDto> following(@PathVariable Long userId) {
         return followService.getFollowing(userId);
     }
     

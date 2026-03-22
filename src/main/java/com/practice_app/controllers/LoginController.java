@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.practice_app.dtos.UserRegisterDto;
+import com.practice_app.dtos.UserLoginDto;
 import com.practice_app.models.UserEntity;
 import com.practice_app.repos.UserRepository;
 
@@ -18,12 +18,12 @@ import com.practice_app.repos.UserRepository;
 public class LoginController {
 	
 	@Autowired
-    private UserRepository userRepository;   
+    private UserRepository UserRepository;   
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserRegisterDto request) {
+    public ResponseEntity<?> login(@RequestBody UserLoginDto request) {
 
-        UserEntity user = userRepository.findByUsername(request.getUsername());
+        UserEntity user = UserRepository.findByUsername(request.getUsername());
 
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

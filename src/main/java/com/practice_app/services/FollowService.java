@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.practice_app.dtos.UserDto;
+import com.practice_app.dtos.UserResponseDto;
 import com.practice_app.models.FollowEntity;
 import com.practice_app.models.UserEntity;
 import com.practice_app.repos.FollowRepository;
@@ -18,7 +18,7 @@ public class FollowService {
 	private FollowRepository followRepository;
 	
 	@Autowired
-	private UserRepository userRepository;
+	private UserRepository UserRepository;
 
 	public void followUser(Long followerId, Long followingId) {
 
@@ -26,8 +26,8 @@ public class FollowService {
 	        return;
 	    }
 
-	    UserEntity follower = userRepository.findById(followerId).orElseThrow();
-	    UserEntity following = userRepository.findById(followingId).orElseThrow();
+	    UserEntity follower = UserRepository.findById(followerId).orElseThrow();
+	    UserEntity following = UserRepository.findById(followingId).orElseThrow();
 
 	    FollowEntity follow = new FollowEntity();
 	    follow.setFollower(follower);
@@ -48,7 +48,7 @@ public class FollowService {
 	}
 
 
-	public List<UserDto> getFollowers(Long userId) {
+	public List<UserResponseDto> getFollowers(Long userId) {
 
 	    List<FollowEntity> follows =
 	            followRepository.findByFollowing_Id(userId);
@@ -58,7 +58,7 @@ public class FollowService {
 	            .toList();
 	}
 	
-	public List<UserDto> getFollowing(Long userId) {
+	public List<UserResponseDto> getFollowing(Long userId) {
 
 	    List<FollowEntity> follows =
 	            followRepository.findByFollower_Id(userId);
@@ -68,13 +68,13 @@ public class FollowService {
 	            .toList();
 	}
 	
-	private UserDto convertToDto(UserEntity user) {
+	private UserResponseDto convertToDto(UserEntity user) {
 
 	    if (user == null) {
 	        return null;
 	    }
 
-	    UserDto dto = new UserDto();
+	    UserResponseDto dto = new UserResponseDto();
 
 	    dto.setId(user.getId());
 	    dto.setName(user.getName());

@@ -1,8 +1,18 @@
 package com.practice_app.models;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity	
 @Table(name = "question_details")
@@ -24,13 +34,20 @@ public class QuestionEntity {
     @JoinColumn(name="user_id", nullable=false)
     private UserEntity user;
 
+    // 🔥 ADD THIS (VERY IMPORTANT)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<QuestionLikeEntity> likes;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReplyEntity> replies;
+    
 	public QuestionEntity() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	public QuestionEntity(Long id, String message, int likesCount, int replyCount, LocalDateTime createdAt,
-			UserEntity user) {
+			UserEntity user, List<QuestionLikeEntity> likes, List<ReplyEntity> replies) {
 		super();
 		this.id = id;
 		this.message = message;
@@ -38,6 +55,8 @@ public class QuestionEntity {
 		this.replyCount = replyCount;
 		this.createdAt = createdAt;
 		this.user = user;
+		this.likes = likes;
+		this.replies = replies;
 	}
 
 	public Long getId() {
@@ -86,6 +105,22 @@ public class QuestionEntity {
 
 	public void setUser(UserEntity user) {
 		this.user = user;
+	}
+
+	public List<QuestionLikeEntity> getLikes() {
+		return likes;
+	}
+
+	public void setLikes(List<QuestionLikeEntity> likes) {
+		this.likes = likes;
+	}
+
+	public List<ReplyEntity> getReplies() {
+		return replies;
+	}
+
+	public void setReplies(List<ReplyEntity> replies) {
+		this.replies = replies;
 	}
     
 }

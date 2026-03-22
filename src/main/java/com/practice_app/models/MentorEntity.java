@@ -11,6 +11,7 @@ import jakarta.persistence.*;
 public class MentorEntity {
 	
 	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
     @ManyToOne(fetch = FetchType.LAZY, optional = true)

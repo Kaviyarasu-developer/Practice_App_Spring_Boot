@@ -1,6 +1,6 @@
 package com.practice_app.dtos;
 
-public class ProfileResponseDto {
+public class AccountResponseDto {
 
     private Long id;
     private String name;
@@ -9,9 +9,9 @@ public class ProfileResponseDto {
 
     private Object profile;
 
-    public ProfileResponseDto() {}
+    public AccountResponseDto() {}
 
-    public ProfileResponseDto(Long id, String name, String username, String role, Object profile) {
+    public AccountResponseDto(Long id, String name, String username, String role, Object profile) {
         this.id = id;
         this.name = name;
         this.username = username;

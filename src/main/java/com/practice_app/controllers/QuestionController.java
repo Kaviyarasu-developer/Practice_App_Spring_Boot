@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.practice_app.dtos.QuestionCreateDto;
-import com.practice_app.dtos.QuestionDto;
+import com.practice_app.dtos.QuestionResponseDto;
 import com.practice_app.services.QuestionService;
 
 @RestController
@@ -22,18 +23,30 @@ public class QuestionController {
     @Autowired
     private QuestionService questionService;
 
+    /// CREATE QUESTION
     @PostMapping
-    public QuestionDto createQuestion(@RequestBody QuestionCreateDto dto) {
+    public QuestionResponseDto createQuestion(@RequestBody QuestionCreateDto dto) {
         return questionService.createQuestion(dto);
     }
 
+    /// GET ALL QUESTIONS (WITH isLiked)
     @GetMapping
-    public List<QuestionDto> getQuestions() {
-        return questionService.getAllQuestions();
+    public List<QuestionResponseDto> getQuestions(@RequestParam Long userId) {
+        return questionService.getAllQuestions(userId); 
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteQuestion(@PathVariable Long id) {
-        questionService.deleteQuestion(id);
+    /// DELETE QUESTION
+    @DeleteMapping("/{questionId}")
+    public void deleteQuestion(@PathVariable Long questionId) {
+        questionService.deleteQuestion(questionId);
+    } 
+
+    /// ⭐ LIKE / UNLIKE (TOGGLE)
+    @PostMapping("/{questionId}/like")
+    public void toggleLike(
+            @PathVariable Long questionId,
+            @RequestParam Long userId
+    ) {
+        questionService.toggleLike(questionId, userId);
     }
 }

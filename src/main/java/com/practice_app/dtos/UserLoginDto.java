@@ -2,9 +2,11 @@ package com.practice_app.dtos;
 
 public class UserLoginDto {
 
+	private String name;
     private String username;
     private String password;
-
+    private String role;
+    
     public UserLoginDto(){}
 
     public String getUsername() {
@@ -22,4 +24,21 @@ public class UserLoginDto {
     public void setPassword(String password) {
         this.password = password;
     }
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+    
 }

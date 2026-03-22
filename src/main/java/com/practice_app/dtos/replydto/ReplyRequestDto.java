@@ -1,4 +1,4 @@
-package com.practice_app.dtos;
+package com.practice_app.dtos.replydto;
 
 public class ReplyRequestDto {
 
