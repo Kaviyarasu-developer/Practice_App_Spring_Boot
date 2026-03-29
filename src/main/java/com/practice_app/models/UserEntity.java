@@ -1,7 +1,5 @@
 package com.practice_app.models;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -45,13 +43,9 @@ public class UserEntity {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
     private StaffEntity staff;
     
-    @ManyToMany(mappedBy = "communityMembers")
-    @JsonIgnore
-    private List<CommunityEntity> communities;
-    
     public UserEntity() {}
 
-	public UserEntity(Long id, String name, String username, String password, String role, StdEntity student, MentorEntity mentor, StaffEntity staff, ClgEntity college, List<CommunityEntity> communities) {
+	public UserEntity(Long id, String name, String username, String password, String role, StdEntity student, MentorEntity mentor, StaffEntity staff, ClgEntity college) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -62,7 +56,6 @@ public class UserEntity {
 		this.mentor = mentor;
 		this.staff = staff;
 		this.college = college;
-		this.communities = communities;
 	}
 
 	public Long getId() {
@@ -136,13 +129,4 @@ public class UserEntity {
 	public void setCollege(ClgEntity college) {
 		this.college = college;
 	}
-
-	public List<CommunityEntity> getCommunities() {
-		return communities;
-	}
-
-	public void setCommunities(List<CommunityEntity> communities) {
-		this.communities = communities;
-	}
-
 }

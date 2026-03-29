@@ -9,5 +9,7 @@ import com.practice_app.models.CommunityEntity;
 public interface CommunityRepository extends JpaRepository<CommunityEntity, Long>{
 
     List<CommunityEntity> findByMentor_Id(Long mentorId);
+    
+    void deleteByCommunityId(Long communityId);
 
 }

@@ -3,7 +3,6 @@ package com.practice_app.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.practice_app.dtos.community.CommunityCreateDto;
 import com.practice_app.dtos.community.CommunityDto;
+import com.practice_app.services.CommunityMemberService;
+import com.practice_app.services.CommunityMessageService;
 import com.practice_app.services.CommunityService;
 
 @RestController
@@ -23,6 +24,12 @@ public class CommunityController {
 
     @Autowired
     private CommunityService communityService;
+    
+    @Autowired
+	private CommunityMessageService communityMessageService;
+    
+    @Autowired
+    private CommunityMemberService communityMemberService;
 
 
     @PostMapping("/create")
@@ -41,6 +48,12 @@ public class CommunityController {
             @RequestParam Long userId){
         return communityService.getAllCommunities(userId); 
     }
+    
+    @GetMapping("/joined")
+    public List<CommunityDto> getJoinedCommunities(
+            @RequestParam Long userId){
+        return communityService.getJoinedCommunities(userId); 
+    }
 
 
     @GetMapping("/{id}")
@@ -48,26 +61,31 @@ public class CommunityController {
             @RequestParam Long userId){
         return communityService.getCommunityById(id, userId);
     } 
-
-
-    @PostMapping("/{communityId}/join")
-    public ResponseEntity<?> joinCommunity(
-            @PathVariable Long communityId,
+    
+    @PostMapping("/toggle-join")
+    public void toggleJoin(
+			@RequestParam Long communityId,
+			@RequestParam Long userId
+	){
+		communityMemberService.toggleJoin(communityId, userId);
+	}
+    
+    @GetMapping("/isJoined")
+    public boolean isJoined(
+            @RequestParam Long communityId,
             @RequestParam Long userId
-    ){
-        communityService.joinCommunity(communityId, userId);
-        return ResponseEntity.ok("Joined successfully");
-
+    ) {
+        return communityMemberService.isUserJoined(communityId, userId);
     }
-
-    @DeleteMapping("/{communityId}/leave")
-    public void leaveCommunity(
-            @PathVariable Long communityId,
+    
+    @DeleteMapping("/message/{messageId}")
+    public void deleteMessage(
+            @PathVariable Long messageId,
             @RequestParam Long userId
-    ){
-        communityService.leaveCommunity(communityId, userId);
+    ) {
+    	System.out.println("Deleting message with ID: " + messageId + " by user ID: " + userId);
+        communityMessageService.deleteMessage(messageId, userId);
     }
-
 
     @DeleteMapping("/delete/{id}")
     public void deleteCommunity(@PathVariable Long id){

@@ -1,9 +1,5 @@
 package com.practice_app.models;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -29,30 +25,19 @@ public class CommunityEntity {
     @JoinColumn(name = "mentor_id")
     private MentorEntity mentor;
 
-    /// COMMUNITY MEMBERS
-    @ManyToMany
-    @JoinTable(
-        name = "community_members",
-        joinColumns = @JoinColumn(name = "community_id"),
-        inverseJoinColumns = @JoinColumn(name = "user_id")
-    ) 
-    @JsonIgnore
-    private List<UserEntity> communityMembers;
-
 	public CommunityEntity() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
     
     	public CommunityEntity(Long communityId, String communityName, String communityDesc, String communityImage,
-			MentorEntity mentor, List<UserEntity> communityMembers, String communityfield) {
+			MentorEntity mentor, String communityfield) {
 		super();
 		this.communityId = communityId;
 		this.communityName = communityName;
 		this.communityDesc = communityDesc;
 		this.communityImage = communityImage;
 		this.mentor = mentor;
-		this.communityMembers = communityMembers;
 		this.communityField = communityfield;
 	}
 
@@ -94,14 +79,6 @@ public class CommunityEntity {
 
 		public void setMentor(MentorEntity mentor) {
 			this.mentor = mentor;
-		}
-
-		public List<UserEntity> getCommunityMembers() {
-			return communityMembers;
-		}
-
-		public void setCommunityMembers(List<UserEntity> communityMembers) {
-			this.communityMembers = communityMembers;
 		}
 
 		public String getCommunityField() {

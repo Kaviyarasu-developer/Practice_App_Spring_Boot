@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class CommunityDto {
 
     private Long communityId;
+    
+    private Long mentorId;
 
     private String communityName;
 
@@ -24,7 +26,7 @@ public class CommunityDto {
     public CommunityDto() {}
 
 	public CommunityDto(Long communityId, String communityName, String communityDesc, String communityImage,
-			String mentorName, String mentorUsername, int membersCount, boolean isJoined) {
+			String mentorName, String mentorUsername, int membersCount, boolean isJoined,Long mentorId) {
 		super();
 		this.communityId = communityId;
 		this.communityName = communityName; 
@@ -98,6 +100,14 @@ public class CommunityDto {
 
 	public void setJoined(boolean isJoined) {
 		this.isJoined = isJoined;
+	}
+	
+	public Long getMentorId() {
+		return mentorId;
+	}
+	
+	public void setMentorId(Long mentorId) {
+		this.mentorId = mentorId;
 	}
     
 }
