@@ -4,8 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.practice_app.dtos.DeleteEventDto;
 import com.practice_app.dtos.QuestionCreateDto;
 import com.practice_app.dtos.QuestionResponseDto;
 import com.practice_app.models.QuestionEntity;
@@ -16,20 +19,24 @@ import com.practice_app.repos.QuestionRepository;
 import com.practice_app.repos.UserRepository;
 
 @Service
+@Transactional
 public class QuestionService {
 
     @Autowired
     private QuestionRepository questionRepository;
 
     @Autowired
-    private UserRepository UserRepository;
+    private UserRepository userRepository;
     
     @Autowired
     private  QuestionLikeRepository likeRepository;
+    
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     public QuestionResponseDto createQuestion(QuestionCreateDto dto) {
 
-        UserEntity user = UserRepository.findById(dto.getUserId()).orElseThrow();
+        UserEntity user = userRepository.findById(dto.getUserId()).orElseThrow();
 
         QuestionEntity question = new QuestionEntity();
         question.setMessage(dto.getMessage());
@@ -38,9 +45,13 @@ public class QuestionService {
         question.setReplyCount(0);
         question.setUser(user);
 
-        questionRepository.save(question);
+        QuestionEntity saved = questionRepository.save(question);
 
-        return convertToDto(question,dto.getUserId());
+        QuestionResponseDto response = convertToDto(saved, dto.getUserId());
+
+        messagingTemplate.convertAndSend("/topic/questions", response);
+
+        return response;
     }
 
     public List<QuestionResponseDto> getAllQuestions(Long userId){
@@ -53,9 +64,14 @@ public class QuestionService {
     
 
     public void deleteQuestion(Long id) {
-        questionRepository.deleteById(id);
-    }
 
+        questionRepository.deleteById(id);
+
+        messagingTemplate.convertAndSend(
+            "/topic/questions",
+            new DeleteEventDto(id, "DELETE")
+        );
+    }
     private QuestionResponseDto convertToDto(QuestionEntity question, Long userId){
 
         QuestionResponseDto dto = new QuestionResponseDto();
@@ -84,7 +100,7 @@ public class QuestionService {
                 likeRepository.findByQuestion_IdAndUser_Id(questionId, userId);
 
         QuestionEntity question = questionRepository.findById(questionId).orElseThrow();
-        UserEntity user = UserRepository.findById(userId).orElseThrow();
+        UserEntity user = userRepository.findById(userId).orElseThrow();
 
         if(existing != null){
             // UNLIKE 

@@ -9,7 +9,7 @@ import java.io.File;
 public class FileUploadController {
 
     private final String UPLOAD_DIR =
-            System.getProperty("user.dir") + "/uploads/";
+            System.getProperty("user.dir") + "/uploads/community_posts/";
 
     @PostMapping("/upload")
     public String uploadImage(@RequestParam("file") MultipartFile file) {
@@ -27,7 +27,7 @@ public class FileUploadController {
 
             file.transferTo(dest);
 
-            return "/uploads/" + fileName; 
+            return "/uploads/community_posts/" + fileName; 
 
         } catch (Exception e) {
             e.printStackTrace(); // 🔥 DEBUG

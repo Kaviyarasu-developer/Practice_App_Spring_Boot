@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import com.practice_app.dtos.DeleteEventDto;
 import com.practice_app.dtos.replydto.ReplyCreateDto;
 import com.practice_app.dtos.replydto.ReplyResponseDto;
 import com.practice_app.models.QuestionEntity;
@@ -28,7 +30,10 @@ public class ReplyService {
     private QuestionRepository questionRepository;
 
     @Autowired
-    private UserRepository UserRepository;
+    private UserRepository userRepository;
+    
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
     
     @Autowired
     private ReplyLikeRepository replyLikeRepository;
@@ -36,7 +41,7 @@ public class ReplyService {
     public ReplyResponseDto addReply(ReplyCreateDto dto) {
 
         QuestionEntity question = questionRepository.findById(dto.getQuestionId()).orElseThrow();
-        UserEntity user = UserRepository.findById(dto.getUserId()).orElseThrow();
+        UserEntity user = userRepository.findById(dto.getUserId()).orElseThrow();
 
         ReplyEntity reply = new ReplyEntity();
         reply.setMessage(dto.getMessage());
@@ -44,12 +49,19 @@ public class ReplyService {
         reply.setQuestion(question);
         reply.setUser(user);
 
-        replyRepository.save(reply);
+        ReplyEntity saved = replyRepository.save(reply);
 
         question.setReplyCount(question.getReplyCount() + 1);
         questionRepository.save(question);
 
-        return convertToDto(reply, dto.getUserId());
+        ReplyResponseDto response = convertToDto(saved, dto.getUserId());
+
+        messagingTemplate.convertAndSend(
+            "/topic/replies/" + dto.getQuestionId(),
+            response
+        );
+
+        return response;
 
     }
 
@@ -72,12 +84,10 @@ public class ReplyService {
         dto.setCreatedAt(r.getCreatedAt());
         dto.setUserId(r.getUser().getId());
 
-        // ✅ likes count
         dto.setLikesCount(
             replyLikeRepository.countByReplyId(r.getId())
         );
 
-        // ✅ isLiked (SAFE)
         if (userId != null) {
             dto.setLiked(
                 replyLikeRepository
@@ -93,21 +103,24 @@ public class ReplyService {
     
     public void deleteReply(Long replyId){
 
-        ReplyEntity reply =
-            replyRepository.findById(replyId).orElseThrow();
+        ReplyEntity reply = replyRepository.findById(replyId)
+                .orElseThrow();
 
         QuestionEntity question = reply.getQuestion();
 
-        // 🔥 delete reply first
         replyRepository.delete(reply);
 
-        // 🔥 decrement count safely
         int currentCount = question.getReplyCount();
 
         if(currentCount > 0){
             question.setReplyCount(currentCount - 1);
             questionRepository.save(question);
         }
+
+        messagingTemplate.convertAndSend(
+            "/topic/replies/" + question.getId(),
+            new DeleteEventDto(replyId, "DELETE")
+        );
     }
     
         public void toggleReplyLike(Long replyId, Long userId){
@@ -116,12 +129,10 @@ public class ReplyService {
                 replyLikeRepository.findByReplyIdAndUserId(replyId, userId);
 
             if(existing.isPresent()){
-                // 🔥 UNLIKE
                 replyLikeRepository.delete(existing.get());
             } else {
-                // 🔥 LIKE
                 ReplyEntity reply = replyRepository.findById(replyId).orElseThrow();
-                UserEntity user = UserRepository.findById(userId).orElseThrow();
+                UserEntity user = userRepository.findById(userId).orElseThrow();
 
                 ReplyLikeEntity like = new ReplyLikeEntity();
                 like.setReply(reply);
