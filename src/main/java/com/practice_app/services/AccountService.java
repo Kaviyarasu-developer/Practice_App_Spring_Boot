@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.practice_app.dtos.AccountCreateDto;
@@ -37,6 +38,9 @@ public class AccountService {
 
     @Autowired
     private ClgRepository clgRepository;
+    
+    @Autowired
+    private BCryptPasswordEncoder encoder;
 
     public void createAccount(AccountCreateDto dto){
 
@@ -44,6 +48,7 @@ public class AccountService {
 
         user.setName(dto.getName());
         user.setUsername(dto.getUsername());
+        user.setPassword(encoder.encode(dto.getPassword()));
         user.setPassword(dto.getPassword());
         user.setRole(dto.getRole());
 
