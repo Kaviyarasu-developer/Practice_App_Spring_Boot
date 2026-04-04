@@ -24,6 +24,7 @@ public class LoginController {
     public ResponseEntity<?> login(@RequestBody UserLoginDto request) {
 
         UserEntity user = UserRepository.findByUsername(request.getUsername());
+        System.out.println(new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode("admin123"));
 
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
