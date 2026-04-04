@@ -28,6 +28,9 @@ public class LoginController {
     public ResponseEntity<?> login(@RequestBody UserLoginDto request) {
 
         UserEntity user = UserRepository.findByUsername(request.getUsername());
+
+        System.out.println(encoder.encode("admin123"));
+	 
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("User not found");
