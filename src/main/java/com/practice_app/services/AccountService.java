@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,9 @@ public class AccountService {
     
     @Autowired
     private BCryptPasswordEncoder encoder;
+    
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     public void createAccount(AccountCreateDto dto){
 
@@ -69,6 +73,7 @@ public class AccountService {
                 std.setCollege(clg1);
 
                 stdRepository.save(std);
+                messagingTemplate.convertAndSend("/topic/users/create", std);
 
                 break;
 
@@ -86,6 +91,7 @@ public class AccountService {
                 staff.setCollege(clg2);
 
                 staffRepository.save(staff);
+                messagingTemplate.convertAndSend("/topic/users/create", staff);
 
                 break;
 
@@ -102,6 +108,7 @@ public class AccountService {
                 mentor.setCollege(clg3);
 
                 mentorRepository.save(mentor);
+                messagingTemplate.convertAndSend("/topic/users/create", mentor);
 
                 break;
 
@@ -115,6 +122,7 @@ public class AccountService {
                 clg.setUser(user);
 
                 clgRepository.save(clg);
+                messagingTemplate.convertAndSend("/topic/users/create", clg);
 
                 break;
         }
@@ -197,6 +205,35 @@ public class AccountService {
             default:
                 throw new RuntimeException("Invalid role");
         }
+    }
+    
+    public void deleteAccount(Long userId) {
+
+        UserEntity user = UserRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        switch (user.getRole()) {
+
+            case "STD":
+                stdRepository.delete(user.getStudent());
+                break;
+
+            case "MENTOR":
+                mentorRepository.delete(user.getMentor());
+                break;
+
+            case "STAFF":
+                staffRepository.delete(user.getStaff());
+                break;
+
+            case "PRINCIPAL":
+                clgRepository.delete(user.getCollege());
+                break;
+        }
+
+        UserRepository.delete(user);
+
+        messagingTemplate.convertAndSend("/topic/users/delete", userId);
     }
         
     private UserResponseDto convertToDto(UserEntity user){
