@@ -79,11 +79,9 @@ public class AccountService {
 
                 staff.setUser(user);
                 staff.setDept(dto.getDept());
-                
-               System.out.println(dto.getClgcode());
 
                 ClgEntity clg2 =
-                        clgRepository.findById(dto.getClgcode()).orElseThrow();
+                        clgRepository.findById(dto.getClgcode()).orElseThrow(() -> new RuntimeException("College not found"));
 
                 staff.setCollege(clg2);
 

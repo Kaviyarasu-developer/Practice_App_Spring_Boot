@@ -37,9 +37,9 @@ public class LoginController {
        if (!encoder.matches(request.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("Invalid password");
-        }
+        }  
         
-        user.setPassword(null); // Clear the password before sending the response
+       // user.setPassword(null); // Clear the password before sending the response
         return ResponseEntity.ok().body(user);
     } 
 }
