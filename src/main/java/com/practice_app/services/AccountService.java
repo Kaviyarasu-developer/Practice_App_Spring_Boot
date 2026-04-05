@@ -49,7 +49,6 @@ public class AccountService {
         user.setName(dto.getName());
         user.setUsername(dto.getUsername());
         user.setPassword(encoder.encode(dto.getPassword()));
-        user.setPassword(dto.getPassword());
         user.setRole(dto.getRole());
 
         UserRepository.save(user); 
