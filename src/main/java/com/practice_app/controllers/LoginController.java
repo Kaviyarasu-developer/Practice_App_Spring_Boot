@@ -28,15 +28,13 @@ public class LoginController {
     public ResponseEntity<?> login(@RequestBody UserLoginDto request) {
 
         UserEntity user = UserRepository.findByUsername(request.getUsername());
-
-        System.out.println(encoder.encode("admin123"));
 	 
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("User not found");
         }
 
-        if (!encoder.matches(request.getPassword(), user.getPassword())) {
+       if (!encoder.matches(request.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("Invalid password");
         }
@@ -45,5 +43,3 @@ public class LoginController {
         return ResponseEntity.ok().body(user);
     } 
 }
-
-
